@@ -1,0 +1,164 @@
+---
+title: "mpg"
+author: Elegant Graphics of Data Analysis
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r library}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+```
+
+What are five basic functions to begin exploring the data object?
+```{r 5 func}
+
+```
+
+Create a function to convert cty and hwy to EUR standard 
+```{r convert}
+mpgTo100km <- function(milespergallon){
+  gallonsliter <- 3.78541178
+  MileKIlometer <- 1.609344
+  
+  l100km <- (100*gallonsliter)/(milespergallon*MileKIlometer)
+  l100km
+}
+```
+
+Which manufacturers have the most model car count in the dataset?
+Count the manufacturers
+```{r count}
+# shortcut - pipe operator %>% Crtl-shift-M
+
+```
+
+Find the unique models in the dataset. Use the $ syntax.
+```{r unique}
+
+```
+
+How would you describe the relationship between cty and hwy? (relationship of 2 numeric variables)
+```{r scatter}
+
+```
+
+Find the total number of observations for a manufacturer-model combination using geom_bar().
+
+```{r combo bar}
+
+
+```
+
+# Experiment with color, shape and size aesthetic.
+
+# Map color to a continuous value. 
+Create a scatterplot of cty and hwy mapping color to displ
+
+```{r}
+
+
+```
+
+# Map color to categorical value.
+Create a scatterplot of cty and hwy mapping color to trans
+```{r}
+
+```
+
+# Map more than one aesthetic in a plot. 
+Create a scatterplot of cty and hwy mapping color to displ. Use the variable trans to color and size.
+```{r}
+
+```
+
+# Map more than one aesthetic in a plot. 
+Create a scatterplot of cty and hwy mapping color to displ. Use the variable trans to color and shape.
+```{r}
+
+```
+
+# How is drive train related to fuel economy?
+# How is drive train related to engine size and class?
+
+Using mpg, group by drive train, drv. Find the mean value of cty then create a bar graph of average value of cty.
+
+What are values of drive train?
+```{r}
+
+```
+
+How many, on average, cty miles can I drive if I had a f? 4? or r? drive train, drv?
+```{r}
+
+```
+
+How many, on average, hwy miles can I drive if I had a f? 4? or r? drive train, drv?
+```{r}
+
+```
+
+How is drive train, drv, (char) related to engine size, displ (cont) and class (char)?
+Use the option position= "dodge" in the geometry.
+```{r}
+
+```
+
+What happens if you try to facet a continuous variable hwy? or cty?
+Use the option position= "dodge" in the geometry.
+```{r}
+
+```
+
+Facet a categorical variable, cyl, instead.
+Use the option position= "dodge" in the geometry.
+```{r}
+
+```
+
+# when we facet a continuous variable it is a little harder to read
+
+Create a scatterplot of displ and cty
+```{r}
+
+```
+
+# Use faceting to explore a 3-way relationship betweem fuel economy,cty,  engine size, displ and number of cylinders.
+
+Using a scatterplot, evaluate the relationship using a 3 variables. 
+```{r}
+
+```
+
+Evaluate the relationship between cty and hwy miles.
+```{r}
+
+```
+
+What is the dimension of the dataframe, mpg? Do we see all points?
+Create a jitter plot instead.
+```{r}
+
+
+```
+
+Convert the variable class into a factor
+Create boxplots by class indicating hwy miles
+```{r}
+library(forcats)
+
+```
+
+

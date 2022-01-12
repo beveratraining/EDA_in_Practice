@@ -1,0 +1,196 @@
+---
+title: "HrtDisease tutorial"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Install needed packages
+## Load packages
+```{r}
+library(tidyverse)	
+library(readr)
+library(e1071)
+library(corrplot)
+library(ggcorrplot)
+library(MASS)
+library(Hmisc)
+library(DataExplorer)
+library(GGally)
+```
+## Import the dataset, heartdisease.csv
+```{r}
+
+```
+
+## Find the structure and data types of the variables.
+```{r}
+
+```
+
+## Missing values
+Plot the missing values using the DataExplorer::plot_missing() function.
+```{r}
+
+```
+
+## Transform variables
+Create a data object,  hd2. 
+a. Use mutate() to create new variables, “sex”, “fbs”, “exang”, “cp”, and “restecg” and using the if_else function.
+b. Create factors of “slope”, “ca”, “thal” 
+(Fill in the missing information to make the script work)
+```{r}
+hd2 <- %>% 
+  mutate(sex = if_else(" "),
+         fbs = if_else(fbs == 1, ">120", "<=120"),
+         exang = if_else(   ),
+         cp =  if_else(cp == 1, "ATYPICAL ANGINA",
+               if_else(cp == 2, "NON-ANGINAL PAIN", "ASYMPTOMATIC")),
+         restecg = if_else(restecg == 0, "NORMAL",
+               if_else(restecg == 1, "ABNORMALITY", "PROBABLE OR DEFINITE")),
+         slope = as.factor(slope)
+         ca = 
+         thal = 
+         target = if_else(target == 1, "YES", "NO")
+         ) %>% 
+  mutate_if(is.character, as.factor) %>% 
+  dplyr::select(target, sex, fbs, exang, cp, restecg, slope, ca, thal, everything())
+```
+
+## Summary statistics
+## Find the summary statistics of the dataset, hd2.
+```{r}
+
+```
+
+## Using the dataframe, hd2, create boxplots of columns “age”:”oldpeak” using base graphics.
+
+```{r}
+
+```
+
+## Data Visualization
+# Create a barplot for the target variable, Heart Disease. Add an x-axis label, “Heart Disease” and y-axis label, “Count”.
+```{r}
+ggplot(data2, aes(, fill=data2$target)) + 
+  geom_bar() +
+  +
+  +
+  ggtitle("Analysis of Presence and Absence of Heart Disease") +
+  scale_fill_discrete(name = "Heart Disease", labels = c("Absence", "Presence"))
+```
+
+## Find the proportion (frequency) of the dataframe, hd2, where target equals “NO” and target equals “YES”. Use the $ syntax.
+```{r}
+
+```
+
+## Group by age, count, n, the frequency of the “age” variable. Filter values where count > 10. Add an x-axis label, “age” and y-axis, “AgeCount”. 
+```{r}
+data2 %>% 
+  %>% 
+  %>% 
+  %>% 
+  ggplot()+
+  geom_col(aes(), fill = "navyblue") +
+  ggtitle("Age Analysis") +
+            +
+            
+```
+
+## Create a bar graph of the variable, “cp” representing levels of the target variable. Fill in the blanks.
+```{r}
+ggplot(data2, aes(  , fill =   )) +
+  geom_bar(position = "fill") +
+  ggtitle("cp")
+```
+
+## Let’s look at the distribution of Male and Female population across the “age” parameter. Use the histogram geometry. 
+```{r}
+data2 %>%
+  ggplot(aes( , )) +
+      () +
+  xlab("Age") + 
+  ylab("Number") +
+  guides(fill = guide_legend(title = "Gender"))
+```
+
+## Let’s look at how cholesterol levels are represented in the data. Using the input dataframe, hd2, create a scatterplot of “age” and “chol”. Use options color to color the points by sex and size to represent the size of the point by the cholesterol level.
+```{r}
+     
+    %>%
+  ggplot(aes(x=,y=,color=  , size=  )) +
+  geom_  (alpha=0.7) +
+  xlab( ) +
+  ylab( ) +
+  guides(fill = guide_legend(title = "Gender"))
+```
+
+## Let’s compare blood pressure across pain type. Using the input dataframe, hd2, create multiple boxplots of “trestbps” by “sex”. Lastly use facet_grid() with the “cp” variable.
+```{r}
+    %>%
+  ggplot(aes(x=,y=  )) +
+  geom_ (fill="darkorange") +
+  xlab( ) +
+  ylab( ) +
+  facet_grid(~cp)
+```
+
+## Let’s compare cholestrol across pain type. Create multiple boxplots of “chol” by “sex”. Fill the box using a hex code. Lastly use facet_grid() with the “cp” variable.
+```{r}
+data2 %>%
+  ggplot(aes(x=,y=  )) +
+  geom_  (fill="#D55E00") +
+  xlab(" ") +
+  ylab(" ") +
+  facet_grid(~cp)
+```
+
+## Find the correlations of columns 10:14. Map the correlations to an object “corr_heart”. Use the dataframe, corr_heart, to create a corrplot, keeping only the upper diagonal. Use method=ellipse. 
+```{r}
+cor_heart <- cor(  )
+cor_heart
+
+#run next script as is
+corrplot(cor_heart, method = "ellipse", type="upper",) 
+
+## Option #2: (run as is) 
+ggcorrplot(cor_heart,lab = T)
+ggcorr(cor_heart, label = T, label_round = 2)
+```
+
+## Use the library, gridExtra, to create multiple bar plots of “sex”, “fbs”, “exang”. Use the data frame, hd2, as the input data frame. (Run script as is)
+```{r}
+library(gridExtra)
+
+grid.arrange(
+  ggplot(data2, aes(x = sex, fill = target)) +
+  geom_bar(position = "fill"),
+  
+  ggplot(data2, aes(x = fbs, fill = target)) +
+  geom_bar(position = "fill"),
+  
+  ggplot(data2, aes(x = exang, fill = target)) +
+  geom_bar(position = "fill"), nrow = 3  )
+```
+
+## Create scatterplots using “age” and “trestbps”. Use the options color() and shape() to color code and size the points of the “target” variable. Include a best fit line.
+```{r}
+
+```
+## Create scatterplots using “age” and “chol”. Use the options color() and shape() to color code and size the points of the “target” variable. Include a best fit line.
+```{r}
+
+```
+## Create scatterplots using “age” and “thalach”. Use the options color() and shape() to color code and size the points of the “target” variable. Include a best fit line.
+```{r}
+
+```
+## Create scatterplots using “age” and “oldpeak”. Use the options color() and shape() to color code and size the points of the “target” variable. Include a best fit line.
+```{r}
+
+```
