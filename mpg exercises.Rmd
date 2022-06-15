@@ -1,0 +1,364 @@
+---
+title: "mpg"
+author: Elegant Graphics of Data Analysis
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Note that the `echo = FALSE` parameter can be added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r library}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+```
+
+```{r 5 func}
+
+```
+
+# Apart from the US, most countries use fuel consumption (fuel consumed over fixed distance) rather than fuel economy (distance travelled with fixed amount of fuel). How could you convert cty and hwy into the European standard of l/100km?
+
+# Create a funcition to convert cty and hwy to EUR standard 
+```{r convert}
+mpgTo100km <- function(milespergallon){
+  gallonsliter <- 3.78541178
+  MileKIlometer <- 1.609344
+  
+  l100km <- (100*gallonsliter)/(milespergallon*MileKIlometer)
+  l100km
+}
+```
+
+Which manufacturers have the most model car count in the dataset? Which model has the most variations?
+
+#Count the manufacturers using the count()
+
+```{r count}
+# shortcut - pipe operator %>% Crtl-shift-M
+
+```
+
+Find the unique models in the dataset. Use the $ syntax.
+```{r unique}
+
+```
+
+Find the total number of observations for a manufacturer-model combination using geom_bar().
+
+```{r combo bar}
+df <- mpg %>%  
+  transmute("man_mod" = paste(manufacturer, model, sep=" "))
+
+ggplot(df, aes(man_mod)) +
+   geom_bar() +
+   coord_flip()
+
+ #alternate plot- Create a barchart using man_mod as the y variable
+ 
+```
+
+# Experiment with color, shape and size aesthetic. What happens when you map them to continuous values? What about categorical values? What happens when you use more than one aesthetic in a plot?
+
+# Map color to a continuous value. 
+# Create a scatterplot of cty and hwy mapping color to displ. Use the pipe operator.
+
+```{r}
+
+```
+
+# Map color to categorical value. Use the trans variable.
+```{r}
+
+```
+
+# Map more than one aesthetic in a plot. Color and size to trans variable.
+```{r}
+
+```
+
+# Map more than one aesthetic in a plot. Color and shape to trans variable.
+```{r}
+
+```
+
+
+# How is drive train related to fuel economy?
+# How is drive train related to engine size and class?
+
+#Exercises:
+# Using mpg, group by drive train, drv. Find the mean value of cty then create a bar graph of average value of cty.
+
+What are (find) values of drive train?
+```{r}
+
+
+```
+
+How many, on average, cty miles can I drive if I had a f? 4? or r? drive train? Find the average city miles grouped by the drv variable. Create a column chart of drv and mean_cty. Use the pipe operator
+
+```{r}
+
+```
+
+How many, on average, hwy miles can I drive if I had a f? 4? or r? drive train? Find the average hwy miles grouped by the drv variable. Create a column chart of drv and mean_hwy. Use the pipe operator
+
+```{r}
+mpg %>%  
+  group_by(drv) %>% 
+   summarise(mean_hwy = mean(hwy)) %>% 
+   ggplot(aes(drv, mean_hwy)) +
+   geom_col()
+```
+
+How is drive train, drv, (char) related to engine size, displ (cont) and class (char)?
+```{r}
+mpg %>% 
+  ggplot(aes(drv, displ, fill=class)) +
+   geom_col(position = "dodge")
+```
+
+#Faceting
+#Another technique for displaying additional categorical variables on a plot is faceting. Faceting creates tables of graphics by splitting the data into subsets and displaying the same graph for each subset.
+
+#There are two types of faceting: grid and wrapped. 
+#An example using faceting
+```{r}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  facet_wrap(~class)
+```
+
+#Exercises:
+What happens if you try to facet a continuous variable hwy? or cty?
+```{r}
+mpg %>% 
+  ggplot(aes(drv, displ, fill=class)) +
+   geom_col(position = "dodge") +
+   facet_wrap(~hwy)
+```
+
+Facet a categorical variable, cyl, instead.
+```{r}
+mpg %>% 
+  ggplot(aes(drv, displ, fill=class)) +
+   geom_col(position = "dodge") +
+   facet_wrap(~cyl)
+```
+
+# when we facet a continuous, it's a little harder to read.
+
+# Use faceting to explore a 3-way relationship betweem fuel economy, engine size and number of cylinders.
+
+Create a scatterplot of displ and cty. Use the %>% 
+```{r}
+
+```
+
+Using a scatterplot, evaluate the relationship using a 3 variables. Use displ and cty, facet wrap by cyl.
+```{r}
+mpg %>% 
+ ggplot(aes(displ, cty)) +
+  geom_point() +
+  facet_wrap(~cyl)
+```
+
+#Geoms
+geom_smooth() fits a smoother to the data and displays the smooth and its standard error.
+
+geom_boxplot() produces a box-and-whisker plot to summarise the distribution of a set of points.
+
+geom_histogram() and geom_freqpoly() show the distribution of continuous variables.
+
+geom_bar() shows the distribution of categorical variables.
+
+geom_path() and geom_line() draw lines between the data points. A line plot is constrained to produce lines that travel from left to right, while paths can go in any direction. Lines are typically used to explore how things change over time.
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  geom_smooth()
+#includws an assessment of uncertainty in the form of point-wise confidence intervals shown in grey
+```
+
+method = "loess", the default for small n, uses a smooth local regression (as described in ?loess). The wiggliness of the line is controlled by the span parameter, which ranges from 0 (exceedingly wiggly) to 1 (not so wiggly).
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  geom_smooth(span = 0.2)
+
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  geom_smooth(span = 1)
+
+```
+method = "gam" fits a generalised additive model provided by the mgcv package. You need to first load mgcv, then use a formula like formula = y ~ s(x) or y ~ s(x, bs = "cs") (for large data). This is what ggplot2 uses when there are more than 1,000 points.
+
+```{r}
+library(mgcv)
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  geom_smooth(method = "gam", formula = y ~ s(x))
+```
+
+method = "lm" fits a linear model, giving the line of best fit.
+```{r}
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+# Boxplots and jitter plots
+```{r}
+#remind ourselves of the scatterplot
+ggplot(mpg, aes(drv, hwy)) + 
+  geom_point()
+```
+
+Jittering, geom_jitter(), adds a little random noise to the data which can help avoid overplotting.
+
+Boxplots, geom_boxplot(), summarise the shape of the distribution with a handful of summary statistics.
+
+Violin plots, geom_violin(), show a compact representation of the “density” of the distribution, highlighting the areas where more points are found.
+
+```{r}
+ggplot(mpg, aes(drv, hwy)) + geom_jitter()
+ggplot(mpg, aes(drv, hwy)) + geom_boxplot()
+ggplot(mpg, aes(drv, hwy)) + geom_violin()
+```
+
+#Histograms and freq polygons
+Histograms and frequency polygons show the distribution of a single numeric variable. They provide more information about the distribution of a single group than boxplots do, at the expense of needing more space.
+
+Create a histogram using x=hwy
+Create a frequency polygon using x=hwy
+```{r}
+
+```
+
+Both histograms and frequency polygons work in the same way: they bin the data, then count the number of observations in each bin. The only difference is the display: histograms use bars and frequency polygons use lines.
+
+Repeat creating frequency polygon plots adding binwidth. Experiment!
+```{r}
+
+```
+
+An alternative to the frequency polygon is the density plot, geom_density(). 
+
+
+To compare the distributions of different subgroups, you can map a categorical variable to either fill (for geom_histogram()) or color (for geom_freqpoly()). It’s easier to compare distributions using the frequency polygon because the underlying perceptual task is easier. 
+
+```{r}
+ggplot(mpg, aes(displ, color = drv)) + 
+  geom_freqpoly(binwidth = 0.5)
+
+ggplot(mpg, aes(displ, fill = drv)) + 
+  geom_histogram(binwidth = 0.5) + 
+  facet_wrap(~drv, ncol = 1)
+```
+
+#Barplots
+The discrete analogue of the histogram is the bar chart, geom_bar().
+
+Create a barchart using x=manufacturer
+```{r}
+
+```
+
+The other form of bar chart is used for presummarised data. As an example, create a df with three drugs with their average effect:
+```{r}
+drugs <- data.frame(
+  drug = c("a", "b", "c"),
+  effect = c(4.2, 9.7, 6.1)
+)
+```
+To display this sort of data, you need to tell geom_bar() to not run the default stat which bins and counts the data. However, consider using geom_point() because points take up less space than bars, and don’t require that the y axis includes 0.
+
+```{r}
+ggplot(drugs, aes(drug, effect)) + 
+  geom_bar(stat = "identity")
+
+ggplot(drugs, aes(drug, effect)) + 
+  geom_point()
+```
+
+Evaluate the relationship between cty and hwy miles using a scatterplot
+```{r}
+ggplot(mpg, aes(cty,hwy)) +
+  geom_point()
+
+#alternate using alpha
+ggplot(mpg, aes(cty,hwy)) +
+  geom_point(alpha=0.3)
+```
+
+# Ask yourself, what is the dimension of the dataframe? Do we see all points?
+
+# Create a jitter plot instead using x=cty and y=hwy.
+```{r}
+
+```
+
+One challenge with the following script...
+```{r}
+ggplot(mpg, aes(class, hwy)) + geom_boxplot()
+```
+is that the ordering of class is alphabetical, which is not terribly useful. How could you change the factor levels to be more informative?
+
+# Convert the variable class into a factor
+# Create boxplots by class indicating hwy miles
+```{r}
+library(forcats)
+mpg %>% 
+  mutate(class = factor(class)) %>% 
+    ggplot(aes(class,hwy)) +
+     geom_boxplot()
+
+#reorders by median
+mpg %>% 
+  mutate(class = factor(class),
+         class = forcats::fct_reorder(class,hwy)) %>% 
+    ggplot(aes(class,hwy)) +
+     geom_boxplot()
+```
+
+#Two families of useful helpers let you make the most common modifications. 
+#Modifying x and y axes labels
+
+```{r}
+ggplot(mpg, aes(cty, hwy)) +
+  geom_point(alpha = 1 / 3)
+
+ggplot(mpg, aes(cty, hwy)) +
+  geom_point(alpha = 1 / 3) + 
+  xlab("city driving (mpg)") + 
+  ylab("highway driving (mpg)")
+
+# Remove the axis labels with NULL
+ggplot(mpg, aes(cty, hwy)) +
+  geom_point(alpha = 1 / 3) + 
+  xlab(NULL) + 
+  ylab(NULL)
+```
+
+#xlim() and ylim() modify the limits of axes
+```{r}
+ggplot(mpg, aes(drv, hwy)) +
+  geom_jitter(width = 0.25)
+
+ggplot(mpg, aes(drv, hwy)) +
+  geom_jitter(width = 0.25) + 
+  xlim("f", "r") + 
+  ylim(20, 30)
+
+# For continuous scales, use NA to set only one limit
+ggplot(mpg, aes(drv, hwy)) +
+  geom_jitter(width = 0.25, na.rm = TRUE) + 
+  ylim(NA, 30)
+```
